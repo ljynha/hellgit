@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AccountDao">
+    <cache></cache>
+    <resultMap id="accountmap" type="com.domain.account">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="age" column="age"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="passports"  javaType="java.util.List" ofType="com.domain.passport">
+            <id property="id" column="p_id"></id>
+            <result property="name" column="name"></result>
+        </collection>
+    </resultMap>
+    <select id="findall" resultMap="accountmap">
+        select a.*,p.* from account a right join account_passport ap on a.id=ap.a_id left join passport p on ap.p_id=p.p_id;
+    </select>
+    <select id="addaccount">
+        insert into account values(#{name},#{age},#{id},#{birthday})
+    </select>
+    <select id="updataaccount" >
+        update  account set name=#{a.name} where id=#{a.id}
+        <if test="name !=null and name.trim().lent">
+            and name like '%'||#{name}||'%'
+        </if>
+    </select>
+    <delete ></delete>
+</mapper>
